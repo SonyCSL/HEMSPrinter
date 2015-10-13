@@ -11,7 +11,7 @@ HEMS Printerは、ハードウェア実装・Webアプリも含むソリュー�
 
 ##ハードウェア
 + レシートプリンタ / スター精密 SM-S210i [Amazonにて34,900円](http://www.amazon.co.jp/SM-S210i%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA-SM-S210i-DB40-JP-%E3%83%A2%E3%83%90%E3%82%A4%E3%83%AB%E3%83%97%E3%83%AA%E3%83%B3%E3%82%BF%E3%83%BC-SM-S210i/dp/B00EF3IEX8) (2015/10/13現在)
-+ Android端末 / BLE接続可能なものが搭載されていれば一応動くはずです
++ Android端末 / BLE接続可能であれば一応動くはずです
 + Lightblue Bean２個 / 一個$30 http://legacy.punchthrough.com/bean/buy/
 + 焦電型赤外線（人感）センサーモジュールＳＢ４１２Ａ / [秋月電子で500円](http://akizukidenshi.com/catalog/g/gM-09002/)
 + Windows PC / エミュレータとProcessingの実行に用いました
@@ -34,12 +34,12 @@ node [mq/runnode.js](https://github.com/SonyCSL/HEMSPrinter/tree/master/web/mq/r
 + 宅内のPC上でダイワハウスのエミュレータを立ち上げます。
 + 同一PC上で[ProcessingのHEMSPrinter2](https://github.com/SonyCSL/HEMSPrinter/tree/master/Processing/HEMSPrinter2/HEMSPrinter2.pde)を立ち上げます。（ソースコード内のIPアドレスを、エミュレータの、すなわち自分のIPアドレスに書き換えてください）
 + ドアセンサーに電源を入れます（ボタン電池CR2032）。
-+ レシートプリンタ、Lightblue Beanに電源を入れます（我々の実装では、プリンタから電源を取ってボードを動かしているので、プリンタだけ入れれば大丈夫です）
-+ 宅内のAndroid端末内にKadecotと、KadecotのLightblue BeanプラグインをインストールしてKadecotを立ち上げます。HEMSPrinterと、DoorSensorという２つのLightblue Bean機器が発見されればOKです。
++ レシートプリンタ、Lightblue Beanに電源を入れます（我々の実装では、プリンタから電源を取ってLightblue Beanを動かしているので、プリンタだけ入れれば大丈夫です）
++ 宅内のAndroid端末内にKadecotと、[KadecotのLightblue Beanプラグイン](https://github.com/SonyCSL/LightblueBeanPlugin)をインストールしてKadecotを立ち上げます。HEMSPrinterと、DoorSensorという２つのLightblue Bean機器が発見されればOKです。
 + KadecotのIPアドレスを調べます（設定⇒開発者モードにチェックを入れればわかりやすいです）
 + [http://kadecotgallery.xyz/KadecotBTClient.html](https://github.com/SonyCSL/HEMSPrinter/tree/master/web/KadecotBTClient.html)を開きます。URL末尾に?kip=[kadecot ip]を追加してください([Kadecot ip]は実際のIPアドレスに変更してください)。最初にOAuth認証があります。認証が終わったら、デバッグコンソールに機器一覧が出ていることを確認します。
-+ Android端末のBluetoothにレシートプリンタをペアリングします。
-+ Android端末にStarWebPRNT Browserをインストールし、立ち上げて設定のPRINTERをPOS PrintersからPortable Printersに変更し、テスト印刷して正常実行していることを確認します（印刷できない場合、プリンタがiPhoneからしか印刷できない設定になっている可能性があります）。http\://kadecotgallery.xyzを開きます。最初の確認用に、プリンタのボタンが光ります。これを押して、消えたら準備は完了です。
++ Android端末にBluetoothでレシートプリンタをペアリングします。
++ Android端末に[StarWebPRNT Browser](https://play.google.com/store/apps/details?id=com.starmicronics.starwebprntpaid)をインストールし、立ち上げて設定のPRINTERをPOS PrintersからPortable Printersに変更し、テスト印刷して正常実行していることを確認します（印刷できない場合、プリンタがiPhoneからしか印刷できない設定になっている可能性があります）。http\://kadecotgallery.xyz/ を開きます。最初の確認用に、プリンタのボタンが光ります。これを押して、消えたら準備は完了です。
 + ドアセンサーが反応すると、プリンター上の押しボタンスイッチが光ります。それを押すと印刷されるはずです。
 + デマンドレスポンスシナリオは、最初はエミュレータの瞬時電力値がスレッショルドを超えた時に自動的に発動するようにしていましたが、スレッショルド値の設定が難しかったのと、デモ効果の面から、Star WebPRNT Browserに表示されているボタンを押すことで発動するようになっています。なお、ボタンは３つ表示されており、ドアセンサーがなくても帰宅シナリオ、外出シナリオを発動させられるようになっています。
 
@@ -49,10 +49,10 @@ node [mq/runnode.js](https://github.com/SonyCSL/HEMSPrinter/tree/master/web/mq/r
  + KadecotBTClient.htmlは任意のPCブラウザで開きます。同一ネットワーク内に存在するAndroid端末上で動作するKadecotとはWebSocketで通信し、kadecotgallery.xyz上のnode.jsとはsocket.ioを使って通信するHubアプリとなっています。（本来ならindex.htmlとKadecotが直接WebSocketで通信できればよいのですが、index.htmlを開くStar Web Print BrowserではWebSocket使用がうまくいかなかったので、Kadecot - KadecotBTClient.html - node.js - MQTT - node.js - index.htmlというまわりくどい方法になっています。ビデオで、本来はクラウドは不要、と言っているのはそういう意味です）
  + mq/runnode.js
 node.js用のプログラムです。単にsocket.ioとMQTTの橋渡しをするためのプログラムです。MQTT向けに12345ポートを用い、index.htmlのために12346ポート, KadecotBTClient.htmlのために12347ポートを開きます。これも、本来ならWebアプリと直接MQTTで通信できればいいのですが、mosquittoのデフォルトのセットアップではwebsocketのトランスポート上でMQTTが不可能なためnode.js/socket.ioをかませることにしました。star webprnt browserでwebsocket使用がうまくいかなかったのも微妙に理由の一つです。
-+ Kadecot Lightblue Bean Plugin : [lightbluebeanplugin](https://github.com/SonyCSL/HEMSPrinter/tree/master/lightbluebeanplugin)
++ Kadecot Lightblue Bean Plugin : [lightbluebeanplugin](https://github.com/SonyCSL/LightblueBeanPlugin)
 　ソニーCSLのホームサーバーKadecotから、Lightblue Beanを使えるようにするプラグインです。ボードとシリアル通信するWebSocket APIを提供します（procedureとして"com.sonycsl.kadecot.lightbluebean.procedure.serial"を、topicとして"com.sonycsl.kadecot.lightbluebean.topic.serial"を提供します）。別のKadecotと同一端末内にインストールし、Kadecotを立ち上げると自動的に立ち上がり、その端末のBLEからLightblue Beanを発見すると利用できるようになります。トラブル等によりLightblue Beanに再接続をしたい場合は、Kadecotのサーバーを落としたうえ、Androidの設定ー＞アプリから、このプラグインの実行も一度停止してください。実装上の都合です。それから、名前で個体識別を行っていますので、複数のボードに同一の名前がついていると誤動作します。
 + Processing：[Processing/HEMSPrinter2/HEMSPrinter2.pde](https://github.com/SonyCSL/HEMSPrinter/tree/master/Processing/HEMSPrinter2/HEMSPrinter2.pde)
-　ダイワハウス提供のエミュレータと同じPCに入れて走らせます。ソースコード内冒頭のSIMULATOR_ADDRを、エミュレータのIPアドレス（つまり、Processingも走っている、同一のPCのアドレス）に変更して実行します。MQTTのライブラリ（https://github.com/256dpi/processing-mqtt）が入っている必要があります。
+　ダイワハウス提供のエミュレータと同じPCに入れて走らせます。ソースコード内冒頭のSIMULATOR_ADDRを、エミュレータのIPアドレス（つまり、Processingも走っている、同一のPCのアドレス）に変更して実行します。MQTTのライブラリ（https\://github.com/256dpi/processing-mqtt ）が入っている必要があります。
 　エミュレータ情報を、kadecotgallery.xyz:12345のMQTTに送ったり、Webアプリからのリクエストに返答する役割があります。
 + Lightblue Bean（押ボタンスイッチ）：
  + 配線：押しボタンスイッチ端子はGNDと3番ポートにつなぎます。
