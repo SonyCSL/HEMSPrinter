@@ -2,12 +2,12 @@
 [![](http://img.youtube.com/vi/yYnhtXYXIbQ/0.jpg)](https://www.youtube.com/watch?v=yYnhtXYXIbQ)
 
 #実行について
-HEMS Printerは、ハードウェア実装・Webアプリも含むソリューションであり、既存のものだけを組み合わせて実行することはできません。実行に必要なソフトウェア資産や開発物はすべてここに列挙しますが、全く同じものを作るには、最終的にははんだづけなども行う必要があります。ご了承ください。
+HEMS Printerは、ハードウェア実装・Webアプリも含むソリューションであり、既存のものだけを組み合わせて実行することはできません。実行に必要なソフトウェア資産や開発物はすべてここに列挙しますが、全く同じものを作るには、はんだづけなども行う必要があります。ご了承ください。
 
 #全体構成
 ![Overview](https://raw.githubusercontent.com/SonyCSL/HEMSPrinter/master/Overview.png)
 
-※この図にはKadecotBTClient.htmlが含まれていません。図があまりに複雑になるので省略しています。WindowsPC内で起動させ、Android上のDevice ServerとMQTT-Socket.io Conversion Serverとの仲介を行います。
+※この図にはプロトコル変換用WebアプリであるKadecotBTClient.htmlが含まれていません。図があまりに複雑になるので省略しています。WindowsPC内で起動させ、Android上のDevice ServerとMQTT-Socket.io Conversion Serverとの仲介を行います。
 #使用したハードウェア・ソフトウェア
 
 ##ハードウェア
@@ -15,7 +15,7 @@ HEMS Printerは、ハードウェア実装・Webアプリも含むソリュー�
 + Android端末 / BLE接続可能であれば一応動くはずです
 + Lightblue Bean２個 / 一個$30 http://legacy.punchthrough.com/bean/buy/
 + 焦電型赤外線（人感）センサーモジュールＳＢ４１２Ａ / [秋月電子で500円](http://akizukidenshi.com/catalog/g/gM-09002/)
-+ Windows PC / エミュレータとProcessingの実行に用いました
++ Windows PC / エミュレータとProcessing、およびプロトコル変換用Webアプリの実行に用いました。
 + LED照明つき押しボタン / 秋葉原ガード下で1100円くらいで購入。LEDは3vで十分光るものに入れ替えています。
 
 ##ソフトウェア
@@ -27,13 +27,13 @@ HEMS Printerは、ハードウェア実装・Webアプリも含むソリュー�
 
 #インストールと使い方
 kadecotgallery.xyzと書いてある所は、[web/以下](https://github.com/SonyCSL/HEMSPrinter/tree/master/web)がインストールされたサーバー名に適宜読み替えてください。
-+ kadecotgallery.xyz上でnginxを立ち上げます。apacheとかでも問題ありません。
++ kadecotgallery.xyz上でnginxを立ち上げます。apacheとかでも問題ありません。上記web/がルートになるように設定しておいてください。
 + kadecotgallery.xyz上でmosquittoを立ち上げます。
 mosquitto -v -p 12345
 + kadecotgallery.xyz上でnode.jsを立ち上げます。
 node [mq/runnode.js](https://github.com/SonyCSL/HEMSPrinter/tree/master/web/mq/runnode.js)
-+ 宅内のPC上でダイワハウスのエミュレータを立ち上げます。
-+ 同一PC上で[ProcessingのHEMSPrinter2](https://github.com/SonyCSL/HEMSPrinter/tree/master/Processing/HEMSPrinter2/HEMSPrinter2.pde)を立ち上げます。（ソースコード内のIPアドレスを、エミュレータの、すなわち自分のIPアドレスに書き換えてください）
++ 宅内のPC上で[ダイワハウスのエミュレータ](http://www.ux-xu.com/daiwa-api/zipfile/win_simulator.zip)を立ち上げます。
++ 同一PC上で[ProcessingのHEMSPrinter2](https://github.com/SonyCSL/HEMSPrinter/tree/master/Processing/HEMSPrinter2/)を立ち上げます。（ソースコード内のIPアドレスを、エミュレータの、すなわち自分のIPアドレスに書き換えてください）
 + ドアセンサーに電源を入れます（ボタン電池CR2032）。
 + レシートプリンタ、Lightblue Beanに電源を入れます（我々の実装では、プリンタから電源を取ってLightblue Beanを動かしているので、プリンタだけ入れれば大丈夫です）
 + 宅内のAndroid端末内にKadecotと、[KadecotのLightblue Beanプラグイン](https://github.com/SonyCSL/LightblueBeanPlugin)をインストールしてKadecotを立ち上げます。HEMSPrinterと、DoorSensorという２つのLightblue Bean機器が発見されればOKです。
@@ -52,8 +52,8 @@ node [mq/runnode.js](https://github.com/SonyCSL/HEMSPrinter/tree/master/web/mq/r
 node.js用のプログラムです。単にsocket.ioとMQTTの橋渡しをするためのプログラムです。MQTT向けに12345ポートを用い、index.htmlのために12346ポート, KadecotBTClient.htmlのために12347ポートを開きます。これも、本来ならWebアプリと直接MQTTで通信できればいいのですが、mosquittoのデフォルトのセットアップではwebsocketのトランスポート上でMQTTが不可能なためnode.js/socket.ioをかませることにしました。star webprnt browserでwebsocket使用がうまくいかなかったのも微妙に理由の一つです。
 + Kadecot Lightblue Bean Plugin : [lightbluebeanplugin](https://github.com/SonyCSL/LightblueBeanPlugin)
 　ソニーCSLのホームサーバーKadecotから、Lightblue Beanを使えるようにするプラグインです。ボードとシリアル通信するWebSocket APIを提供します（procedureとして"com.sonycsl.kadecot.lightbluebean.procedure.serial"を、topicとして"com.sonycsl.kadecot.lightbluebean.topic.serial"を提供します）。別のKadecotと同一端末内にインストールし、Kadecotを立ち上げると自動的に立ち上がり、その端末のBLEからLightblue Beanを発見すると利用できるようになります。トラブル等によりLightblue Beanに再接続をしたい場合は、Kadecotのサーバーを落としたうえ、Androidの設定ー＞アプリから、このプラグインの実行も一度停止してください。実装上の都合です。それから、名前で個体識別を行っていますので、複数のボードに同一の名前がついていると誤動作します。
-+ Processing：[Processing/HEMSPrinter2/HEMSPrinter2.pde](https://github.com/SonyCSL/HEMSPrinter/tree/master/Processing/HEMSPrinter2/HEMSPrinter2.pde)
-　ダイワハウス提供のエミュレータと同じPCに入れて走らせます。ソースコード内冒頭のSIMULATOR_ADDRを、エミュレータのIPアドレス（つまり、Processingも走っている、同一のPCのアドレス）に変更して実行します。MQTTのライブラリ（https\://github.com/256dpi/processing-mqtt ）が入っている必要があります。
++ Processing：[Processing/HEMSPrinter2](https://github.com/SonyCSL/HEMSPrinter/tree/master/Processing/HEMSPrinter2/)
+　ダイワハウス提供のエミュレータと同じPCに入れて走らせます。ソースコード内冒頭のSIMULATOR_ADDRを、エミュレータのIPアドレス（つまり、Processingも走っている、同一のPCのアドレス）に変更して実行します。MQTTのライブラリなど（https\://github.com/256dpi/processing-mqtt ）を利用しています。
 　エミュレータ情報を、kadecotgallery.xyz:12345のMQTTに送ったり、Webアプリからのリクエストに返答する役割があります。
 + Lightblue Bean（押ボタンスイッチ）：
  + 配線：押しボタンスイッチ端子はGNDと3番ポートにつなぎます。
