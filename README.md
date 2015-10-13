@@ -7,6 +7,7 @@ HEMS Printerは、ハードウェア実装・Webアプリも含むソリュー�
 #全体構成
 ![Overview](https://raw.githubusercontent.com/SonyCSL/HEMSPrinter/master/Overview.png)
 
+※この図にはKadecotBTClient.htmlが含まれていません。図があまりに複雑になるので省略しています。WindowsPC内で起動させ、Android上のDevice ServerとMQTT-Socket.io Conversion Serverとの仲介を行います。
 #使用したハードウェア・ソフトウェア
 
 ##ハードウェア
