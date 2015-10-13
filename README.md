@@ -1,68 +1,64 @@
-HEMS Printer�̐����r�f�I
-https://youtu.be/yYnhtXYXIbQ
+#HEMS Printerとは
+[![](http://img.youtube.com/vi/yYnhtXYXIbQ/0.jpg)](https://www.youtube.com/watch?v=yYnhtXYXIbQ)
 
-HEMS Printer�́A�n�[�h�E�F�A�����EWeb�A�v�����܂ރ\�����[�V�����ł���A�����̂��̂�����g�ݍ��킹�Ď��s���邱�Ƃ͂ł��܂���B���s�ɕK�v�ȃ\�t�g�E�F�A���Y��J�����͂��ׂĂ����ɗ񋓂��܂����A�S���������̂����ɂ́A�ŏI�I�ɂ͂͂񂾂Â��Ȃǂ��s���K�v������܂��B���������������B
+#実行について
+HEMS Printerは、ハードウェア実装・Webアプリも含むソリューションであり、既存のものだけを組み合わせて実行することはできません。実行に必要なソフトウェア資産や開発物はすべてここに列挙しますが、全く同じものを作るには、最終的にははんだづけなども行う必要があります。ご了承ください。
 
-�S�̍\����Overview.png�ɂ���܂��B
+#全体構成
+![Overview](https://raw.githubusercontent.com/SonyCSL/HEMSPrinter/master/Overview.png)
 
-���g�p�����n�[�h�E�F�A�E�\�t�g�E�F�A
+#使用したハードウェア・ソフトウェア
 
-�n�[�h�E�F�A
-�E���V�[�g�v�����^�@�X�^�[���� SM-S210i Amazon�ɂ�34,900�~ (2015/10/13����)
-http://www.amazon.co.jp/SM-S210i%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA-SM-S210i-DB40-JP-%E3%83%A2%E3%83%90%E3%82%A4%E3%83%AB%E3%83%97%E3%83%AA%E3%83%B3%E3%82%BF%E3%83%BC-SM-S210i/dp/B00EF3IEX8
-�EAndroid�[��(BLE�ڑ��\�Ȃ��̂����ڂ���Ă���Έꉞ�����͂��ł�)
-�ELightblue Bean�Q�� (���$30 http://legacy.punchthrough.com/bean/buy/)
-�E�œd�^�ԊO���i�l���j�Z���T�[���W���[���@�r�a�S�P�Q�`�i�H���d�q��500�~http://akizukidenshi.com/catalog/g/gM-09002/�j
-�EWindows PC (�G�~�����[�^��Processing�̎��s�ɗp���܂����j
-�ELED�Ɩ��������{�^���i�H�t���K�[�h����1100�~���炢�ōw���BLED��3v�ŏ\��������̂ɓ���ւ��Ă��܂��B
+##ハードウェア
++ レシートプリンタ / スター精密 SM-S210i [Amazonにて34,900円](http://www.amazon.co.jp/SM-S210i%E3%82%B7%E3%83%AA%E3%83%BC%E3%82%BA-SM-S210i-DB40-JP-%E3%83%A2%E3%83%90%E3%82%A4%E3%83%AB%E3%83%97%E3%83%AA%E3%83%B3%E3%82%BF%E3%83%BC-SM-S210i/dp/B00EF3IEX8) (2015/10/13現在)
++ Android端末 / BLE接続可能なものが搭載されていれば一応動くはずです
++ Lightblue Bean２個 / 一個$30 http://legacy.punchthrough.com/bean/buy/
++ 焦電型赤外線（人感）センサーモジュールＳＢ４１２Ａ / [秋月電子で500円](http://akizukidenshi.com/catalog/g/gM-09002/)
++ Windows PC / エミュレータとProcessingの実行に用いました
++ LED照明つき押しボタン / 秋葉原ガード下で1100円くらいで購入。LEDは3vで十分光るものに入れ替えています。
 
-�\�t�g�E�F�A
-�Emosquitto (MQTT Broker. Port12345���g�p)
-�Enode.js (MQTT-Socket.io�̕ϊ��p.Port12346��12347���g�p�Bexpress,mqtt,socket.io�̂R�̃p�b�P�[�W�����Ă��܂��B�j
-�Enginx (Web server�B�ȏ�R��AWS��ɍ\�z���܂����Bkadecotgallery.xyz:80���g�p
+##ソフトウェア
++ mosquitto / MQTT ブローカー。 12345番ポートを使用)
++ node.js / MQTT-Socket.ioの変換用.12346番ポートと12347番ポートを使用。express,mqtt,socket.ioの３つのパッケージを入れています。
++ nginx / Web server。以上３つはAWS上に構築しました。80番ポートを使用
++ StarWebPRNT Browser 有料版 / ([Google Playにて3600円](https://play.google.com/store/apps/details?id=com.starmicronics.starwebprntpaid)。Android端末に入れて使います）
++ Kadecot / [Google Playから無料で落とせます](https://play.google.com/store/apps/details?id=com.sonycsl.Kadecot)
 
-�EStarWebPRNT Browser �L���ŁB(Google Play�ɂ�3600�~�BAndroid�[���ɓ���Ďg���܂��j
-https://play.google.com/store/apps/details?id=com.starmicronics.starwebprntpaid
-�EKadecot�@�iGoogle Play���疳���ŗ��Ƃ��܂��B
-https://play.google.com/store/apps/details?id=com.sonycsl.Kadecot
-
-
-���g�����ihemsgallery.xyz�Ə����Ă��鏊�́Aapp/web���C���X�g�[�����ꂽ�T�[�o�[���ɓK�X�ǂݑւ��Ă��������B
-�Ehemsgallery.xyz���nginx�𗧂��グ�܂��Bapache�Ƃ��ł���肠��܂���B
-�Ehemsgallery.xyz���mosquitto�𗧂��グ�܂��B
+#インストールと使い方
+kadecotgallery.xyzと書いてある所は、[web/以下](https://github.com/SonyCSL/HEMSPrinter/tree/master/web)がインストールされたサーバー名に適宜読み替えてください。
++ kadecotgallery.xyz上でnginxを立ち上げます。apacheとかでも問題ありません。
++ kadecotgallery.xyz上でmosquittoを立ち上げます。
 mosquitto -v -p 12345
-�Ehemsgallery.xyz���node.js�𗧂��グ�܂��B
-node mq/runnode.js
-�E�����PC��Ń_�C���n�E�X�̃G�~�����[�^�𗧂��グ�܂��B
-�E����PC���Processing��HEMSPrinter2�𗧂��グ�܂��B�i�\�[�X�R�[�h����IP�A�h���X���A�G�~�����[�^�́A���Ȃ킿������IP�A�h���X�ɏ��������Ă��������j
-�E�h�A�Z���T�[�ɓd�������܂��i�{�^���d�rCR2032�j�B
-�E���V�[�g�v�����^�ALightblue Bean�ɓd�������܂��i��X�̎����ł́A�v�����^����d��������ă{�[�h�𓮂����Ă���̂ŁA�v�����^���������Α��v�ł��j
-�E�����Android�[������Kadecot�ƁAKadecot��Lightblue Bean�v���O�C�����C���X�g�[������Kadecot�𗧂��グ�܂��BHEMSPrinter�ƁADoorSensor�Ƃ����Q��Lightblue Bean�@�킪����������OK�ł��B
-�EKadecot��IP�A�h���X�𒲂ׂ܂��i�ݒ�ˊJ���҃��[�h�Ƀ`�F�b�N������΂킩��₷���ł��j
-�Ehttp://kadecotgallery.xyz/KadecotBTClient.html���J���܂��BURL������?kip=[kadecot ip]��ǉ����Ă�������([Kadecot ip]�͎��ۂ�IP�A�h���X�ɕύX���Ă�������)�B�ŏ���OAuth�F�؂�����܂��B�F�؂��I�������A�f�o�b�O�R���\�[���ɋ@��ꗗ���o�Ă��邱�Ƃ��m�F���܂��B
-�EAndroid�[����Bluetooth�Ƀ��V�[�g�v�����^���y�A�����O���܂��B
-�EAndroid�[����StarWebPRNT Browser���C���X�g�[�����A�����グ�Đݒ��PRINTER��POS Printers����Portable Printers�ɕύX���A�e�X�g������Đ�����s���Ă��邱�Ƃ��m�F���܂��i����ł��Ȃ��ꍇ�A�v�����^��iPhone���炵������ł��Ȃ��ݒ�ɂȂ��Ă���\��������܂��j�Bhttp://kadecotgallery.xyz���J���܂��B�ŏ��̊m�F�p�ɁA�v�����^�̃{�^��������܂��B����������āA�������珀���͊����ł��B
-�E�h�A�Z���T�[����������ƁA�v�����^�[��̉����{�^���X�C�b�`������܂��B����������ƈ�������͂��ł��B
-�E�f�}���h���X�|���X�V�i���I�́A�ŏ��̓G�~�����[�^�̏u���d�͒l���X���b�V�����h�𒴂������Ɏ����I�ɔ�������悤�ɂ��Ă��܂������A�X���b�V�����h�l�̐ݒ肪��������̂ƁA�f�����ʂ̖ʂ���AStar WebPRNT Browser�ɕ\������Ă���{�^�����������ƂŔ�������悤�ɂȂ��Ă��܂��B�Ȃ��A�{�^���͂R�\������Ă���A�h�A�Z���T�[���Ȃ��Ă��A��V�i���I�A�O�o�V�i���I�𔭓���������悤�ɂȂ��Ă��܂��B
++ kadecotgallery.xyz上でnode.jsを立ち上げます。
+node [mq/runnode.js](https://github.com/SonyCSL/HEMSPrinter/tree/master/web/mq/runnode.js)
++ 宅内のPC上でダイワハウスのエミュレータを立ち上げます。
++ 同一PC上で[ProcessingのHEMSPrinter2](https://github.com/SonyCSL/HEMSPrinter/tree/master/Processing/HEMSPrinter2/HEMSPrinter2.pde)を立ち上げます。（ソースコード内のIPアドレスを、エミュレータの、すなわち自分のIPアドレスに書き換えてください）
++ ドアセンサーに電源を入れます（ボタン電池CR2032）。
++ レシートプリンタ、Lightblue Beanに電源を入れます（我々の実装では、プリンタから電源を取ってボードを動かしているので、プリンタだけ入れれば大丈夫です）
++ 宅内のAndroid端末内にKadecotと、KadecotのLightblue BeanプラグインをインストールしてKadecotを立ち上げます。HEMSPrinterと、DoorSensorという２つのLightblue Bean機器が発見されればOKです。
++ KadecotのIPアドレスを調べます（設定⇒開発者モードにチェックを入れればわかりやすいです）
++ [http://kadecotgallery.xyz/KadecotBTClient.html](https://github.com/SonyCSL/HEMSPrinter/tree/master/web/KadecotBTClient.html)を開きます。URL末尾に?kip=[kadecot ip]を追加してください([Kadecot ip]は実際のIPアドレスに変更してください)。最初にOAuth認証があります。認証が終わったら、デバッグコンソールに機器一覧が出ていることを確認します。
++ Android端末のBluetoothにレシートプリンタをペアリングします。
++ Android端末にStarWebPRNT Browserをインストールし、立ち上げて設定のPRINTERをPOS PrintersからPortable Printersに変更し、テスト印刷して正常実行していることを確認します（印刷できない場合、プリンタがiPhoneからしか印刷できない設定になっている可能性があります）。http\://kadecotgallery.xyzを開きます。最初の確認用に、プリンタのボタンが光ります。これを押して、消えたら準備は完了です。
++ ドアセンサーが反応すると、プリンター上の押しボタンスイッチが光ります。それを押すと印刷されるはずです。
++ デマンドレスポンスシナリオは、最初はエミュレータの瞬時電力値がスレッショルドを超えた時に自動的に発動するようにしていましたが、スレッショルド値の設定が難しかったのと、デモ効果の面から、Star WebPRNT Browserに表示されているボタンを押すことで発動するようになっています。なお、ボタンは３つ表示されており、ドアセンサーがなくても帰宅シナリオ、外出シナリオを発動させられるようになっています。
 
-���J����������
-�EWeb�A�v���Fweb/�t�H���_�ȉ��ɒu���Ă���܂��B���݂͓�����Ԃ�http://kadecotgallery.xyz�ȉ��ɃC���X�g�[������Ă��܂����A�����ύX�̉\��������܂��B
-�@- index.html��Android�[���ɓ��ꂽStar WebPrint Browser�ŊJ�����߂�Web�A�v���ŁA�K�v�ɉ�����Bluetooth��ʂ��ăv�����^�Ɉ���M���𑗂�����AMQTT��ʂ���Lightblue Bean�ƒʐM���s���܂��B
-  - KadecotBTClient.html�͔C�ӂ�PC�u���E�U�ŊJ���܂��B����l�b�g���[�N���ɑ��݂���Android�[����œ��삷��Kadecot�Ƃ�WebSocket�ŒʐM���Akadecotgallery.xyz���node.js�Ƃ�socket.io���g���ĒʐM����Hub�A�v���ƂȂ��Ă��܂��B�i�{���Ȃ�index.html��Kadecot������WebSocket�ŒʐM�ł���΂悢�̂ł����Aindex.html���J��Star Web Print Browser�ł�WebSocket�g�p�����܂������Ȃ������̂ŁAKadecot - KadecotBTClient.html - node.js - MQTT - node.js - index.html�Ƃ����܂�肭�ǂ����@�ɂȂ��Ă��܂��B�r�f�I�ŁA�{���̓N���E�h�͕s�v�A�ƌ����Ă���̂͂��������Ӗ��ł��j
-�@- mq/runnode.js
-node.js�p�̃v���O�����ł��B�P��socket.io��MQTT�̋��n�������邽�߂̃v���O�����ł��BMQTT������12345�|�[�g��p���Aindex.html�̂��߂�12346�|�[�g, KadecotBTClient.html�̂��߂�12347�|�[�g���J���܂��B������A�{���Ȃ�Web�A�v���ƒ���MQTT�ŒʐM�ł���΂����̂ł����Amosquitto�̃f�t�H���g�̃Z�b�g�A�b�v�ł�websocket�̃g�����X�|�[�g���MQTT���s�\�Ȃ���node.js/socket.io�����܂��邱�Ƃɂ��܂����Bstar webprnt browser��websocket�g�p�����܂������Ȃ������̂������ɗ��R�̈�ł��B
-
-�EKadecot Lightblue Bean Plugin : lightbluebeanplugin
-�@�\�j�[CSL�̃z�[���T�[�o�[Kadecot����ALightblue Bean���g����悤�ɂ���v���O�C���ł��B�{�[�h�ƃV���A���ʐM����WebSocket API��񋟂��܂��iprocedure�Ƃ���"com.sonycsl.kadecot.lightbluebean.procedure.serial"���Atopic�Ƃ���"com.sonycsl.kadecot.lightbluebean.topic.serial"��񋟂��܂��j�B�ʂ�Kadecot�Ɠ���[�����ɃC���X�g�[�����AKadecot�𗧂��グ��Ǝ����I�ɗ����オ��A���̒[����BLE����Lightblue Bean�𔭌�����Ɨ��p�ł���悤�ɂȂ�܂��B�g���u�����ɂ��Lightblue Bean�ɍĐڑ����������ꍇ�́AKadecot�̃T�[�o�[�𗎂Ƃ��������AAndroid�̐ݒ�[���A�v������A���̃v���O�C���̎��s����x��~���Ă��������B������̓s���ł��B���ꂩ��A���O�Ō̎��ʂ��s���Ă��܂��̂ŁA�����̃{�[�h�ɓ���̖��O�����Ă���ƌ듮�삵�܂��B
-�EProcessing�FProcessing/HEMSPrinter2/HEMSPrinter2.pde
-�@�_�C���n�E�X�񋟂̃G�~�����[�^�Ɠ���PC�ɓ���đ��点�܂��B�\�[�X�R�[�h���`����SIMULATOR_ADDR���A�G�~�����[�^��IP�A�h���X�i�܂�AProcessing�������Ă���A�����PC�̃A�h���X�j�ɕύX���Ď��s���܂��BMQTT�̃��C�u�����ihttps://github.com/256dpi/processing-mqtt�j�������Ă���K�v������܂��B
-�@�G�~�����[�^�����Akadecotgallery.xyz:12345��MQTT�ɑ�������AWeb�A�v������̃��N�G�X�g�ɕԓ��������������܂��B
-
-�ELightblue Bean�i���{�^���X�C�b�`�j�F
-�@�z���F�����{�^���X�C�b�`�[�q��GND��3�ԃ|�[�g�ɂȂ��܂��B
-	�{�^����LED��GND����GND�ɁAVcc����4�ԃ|�[�g�ɂȂ��܂��i������Ɩ����ł����������Ă��܂��B�{�^���d�r�œ������Ă���̂ł܂��؂��悤�ȑ�d���͗���Ȃ��̂ł͂Ǝv���Ă��܂��BGND�̑����5�ԃ|�[�g�ł����������܂��j
-�@�v���O�����FLightblueBean/HEMSPrinter2/HEMSPrinter2.ino���AWindows�pBean Loader�Œ[���ɗ������݂܂��B�{�[�h�̖��O���uHEMSPrinter�v�ɂ��Ă����K�v������܂��B
-   ��Lightblue Bean��Arduino�݊��{�[�h�Ȃ̂ŁA�\�[�X��Arduino�Ɠ����悤�ɓǂ߂܂��B
-�ELightblue Bean�i�h�A�Z���T�[�j
-�@�z���F�H���̐l���ԊO���Z���T�[�������t���Ă��܂��B�����3v�쓮���\�Ȃ̂ŁA���ʂɃ{�[�h���GND��Vcc�œd�����������A�o�͒[�q��A0�ɂȂ��ł��܂��B
-�@�v���O�����FLightblueBean/DoorSensor/DoorSensor.ino�ɂ���܂��B�l���Z���T�[�����łȂ��A�{�[�h��ɍŏ�����ڂ��Ă�������x�Z���T�[��p���Ă��܂��B���փh�A�Ɏ��t���邱�Ƃ�z�肵�Ă��܂��B�l���Z���T�[����������O�ɉ����x�Z���T�[�����������ꍇ�́A�O����l�������Ă����ƍl������̂ŁA�A��M�����o���܂��B�t�ɁA�l���Z���T�[����ɔ���������O�o���悤�Ƃ��Ă���ƍl������̂ŁA�O�o�M�����o���܂��B�i��҂́A���֑|�������Ă���Ƃ��ȂǂɌ�F���̉\��������܂��j
+#開発したもの
++ Webアプリ：[web/](https://github.com/SonyCSL/HEMSPrinter/tree/master/web)フォルダ以下に置いてあります。現在は動く状態でhttp://kadecotgallery.xyz/ 以下にインストールされていますが、将来変更の可能性があります。
+ + index.htmlはAndroid端末に入れたStar WebPrint Browserで開くためのWebアプリで、必要に応じてBluetoothを通じてプリンタに印刷信号を送ったり、MQTTを通じてLightblue Beanと通信を行います。
+ + KadecotBTClient.htmlは任意のPCブラウザで開きます。同一ネットワーク内に存在するAndroid端末上で動作するKadecotとはWebSocketで通信し、kadecotgallery.xyz上のnode.jsとはsocket.ioを使って通信するHubアプリとなっています。（本来ならindex.htmlとKadecotが直接WebSocketで通信できればよいのですが、index.htmlを開くStar Web Print BrowserではWebSocket使用がうまくいかなかったので、Kadecot - KadecotBTClient.html - node.js - MQTT - node.js - index.htmlというまわりくどい方法になっています。ビデオで、本来はクラウドは不要、と言っているのはそういう意味です）
+ + mq/runnode.js
+node.js用のプログラムです。単にsocket.ioとMQTTの橋渡しをするためのプログラムです。MQTT向けに12345ポートを用い、index.htmlのために12346ポート, KadecotBTClient.htmlのために12347ポートを開きます。これも、本来ならWebアプリと直接MQTTで通信できればいいのですが、mosquittoのデフォルトのセットアップではwebsocketのトランスポート上でMQTTが不可能なためnode.js/socket.ioをかませることにしました。star webprnt browserでwebsocket使用がうまくいかなかったのも微妙に理由の一つです。
++ Kadecot Lightblue Bean Plugin : [lightbluebeanplugin](https://github.com/SonyCSL/HEMSPrinter/tree/master/lightbluebeanplugin)
+　ソニーCSLのホームサーバーKadecotから、Lightblue Beanを使えるようにするプラグインです。ボードとシリアル通信するWebSocket APIを提供します（procedureとして"com.sonycsl.kadecot.lightbluebean.procedure.serial"を、topicとして"com.sonycsl.kadecot.lightbluebean.topic.serial"を提供します）。別のKadecotと同一端末内にインストールし、Kadecotを立ち上げると自動的に立ち上がり、その端末のBLEからLightblue Beanを発見すると利用できるようになります。トラブル等によりLightblue Beanに再接続をしたい場合は、Kadecotのサーバーを落としたうえ、Androidの設定ー＞アプリから、このプラグインの実行も一度停止してください。実装上の都合です。それから、名前で個体識別を行っていますので、複数のボードに同一の名前がついていると誤動作します。
++ Processing：[Processing/HEMSPrinter2/HEMSPrinter2.pde](https://github.com/SonyCSL/HEMSPrinter/tree/master/Processing/HEMSPrinter2/HEMSPrinter2.pde)
+　ダイワハウス提供のエミュレータと同じPCに入れて走らせます。ソースコード内冒頭のSIMULATOR_ADDRを、エミュレータのIPアドレス（つまり、Processingも走っている、同一のPCのアドレス）に変更して実行します。MQTTのライブラリ（https://github.com/256dpi/processing-mqtt）が入っている必要があります。
+　エミュレータ情報を、kadecotgallery.xyz:12345のMQTTに送ったり、Webアプリからのリクエストに返答する役割があります。
++ Lightblue Bean（押ボタンスイッチ）：
+ + 配線：押しボタンスイッチ端子はGNDと3番ポートにつなぎます。
+	ボタンのLEDはGND側をGNDに、Vcc側を4番ポートにつなぎます（ちょっと無茶ですが直結しています。ボタン電池で動かしているのでまぁ切れるような大電流は流れないのではと思っています。GNDの代わりに5番ポートでも多分動きます）
+ + プログラム：[LightblueBean/HEMSPrinter2/HEMSPrinter2.ino](https://github.com/SonyCSL/HEMSPrinter/tree/master/LightblueBean/HEMSPrinter2/HEMSPrinter2.ino)を、Windows用Bean Loaderで端末に流し込みます。ボードの名前を「HEMSPrinter」にしておく必要があります。
+   ※Lightblue BeanはArduino互換ボードなので、ソースはArduinoと同じように読めます。
++ Lightblue Bean（ドアセンサー）
+ + 配線：秋月の人感赤外線センサーだけ取り付けています。これは3v駆動が可能なので、普通にボード上のGNDとVccで電源を供給し、出力端子はA0につないでいます。
+ + プログラム：[LightblueBean/DoorSensor/DoorSensor.ino](https://github.com/SonyCSL/HEMSPrinter/tree/master/LightblueBean/DoorSensor/DoorSensor.ino)にあります。人感センサーだけでなく、ボード上に最初から載っている加速度センサーを用いています。玄関ドアに取り付けることを想定しています。人感センサーが反応する前に加速度センサーが反応した場合は、外から人が入ってきたと考えられるので、帰宅信号を出します。逆に、人感センサーが先に反応したら外出しようとしていると考えられるので、外出信号を出します。（後者は、玄関掃除をしているときなどに誤認識の可能性があります）
