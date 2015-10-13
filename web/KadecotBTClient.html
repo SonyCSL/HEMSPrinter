@@ -1,0 +1,198 @@
+<html>
+<head>
+    <script type="text/javascript" src="http://app.kadecot.net/js/wamp-client.min.js"></script>
+    <script type="text/javascript" src="http://app.kadecot.net/js/wamp-client-browser.js"></script>
+<script src="mq/socket.io.js"></script>
+    <script>
+var wampClient ;
+var beans = {} ;
+var light , aircon , ecocute ;
+var irkit = null ;
+
+  urlVars = {} ;
+
+  if( location.href.indexOf('?')>-1 ){
+	var hash;
+	var hashes = location.href.slice(location.href.indexOf('?') + 1).split('&');
+	for(var i = 0; i <hashes.length; i++){
+		hash = hashes[i].split('=');
+		urlVars[hash[0]] = hash[1];
+	}
+  }
+
+var mq_socket ;
+
+      onload=function(){
+
+	mq_socket = io.connect('http://kadecotgallery.xyz:12347');
+	mq_socket.emit('init','Hello from KadecotBTClient');
+	mq_socket.on('message',function(msg){
+		var ci = msg.indexOf(",") ;
+		var cmd = msg.substring(0,ci) ;
+		var payload = msg.substring(ci+1) ;
+		//console.log(msg) ;
+
+		if( msg === 'PrinterLEDOn' ){
+			wampClient.sendCall(
+		            {"deviceId":beans.HEMSPrinter.deviceId}
+		            ,"com.sonycsl.kadecot.lightbluebean.procedure.serial"
+		            ,[]
+		            ,{"value":1}
+		          );
+		} else if( msg === 'PrinterLEDOff' ){
+			wampClient.sendCall(
+		            {"deviceId":beans.HEMSPrinter.deviceId}
+		            ,"com.sonycsl.kadecot.lightbluebean.procedure.serial"
+		            ,[]
+		            ,{"value":0}
+		          );
+		}
+
+	} ) ;
+
+
+
+
+
+
+	wampClient = new WampClientBrowser() ;
+	wampClient.addOpenCallback(function(){
+		wampClient.sendHello("default", {"roles":{"caller":{},"subscriber":{}}}, function(){
+			// request device list
+			wampClient.sendCall({}, "com.sonycsl.kadecot.provider.procedure.getDeviceList", null, null, function(ret){
+				console.log('Devlist reply! : '+JSON.stringify(arguments)) ;
+				//var ds = ret[4].deviceList ;
+				for( var di=0;di<ret[4].deviceList.length;++di ){
+					var d = ret[4].deviceList[di] ;
+					if( d.protocol === 'lightbluebean'
+						&& d.deviceType === 'bean' ){
+						beans[d.nickname] = d ;
+					} else if( d.protocol === 'echonetlite' && d.status){
+						switch( d.deviceType ){
+						case 'ElectricWaterHeater' :
+							ecocute = d ;
+							break ;
+						case 'HomeAirConditioner' :
+							aircon = d ;
+							break ;
+						case 'GeneralLighting' :
+							light = d ;
+							break ;
+						}
+					} else if( d.protocol == 'irkit' && d.deviceType == 'irkit' ){
+						irkit = d ;
+					}
+				}
+				onDevFound() ;
+			});
+		} ) ;
+	} ) ;
+	wampClient.connect("ws://"+urlVars.kip+":41314/","com.sonycsl.kadecot");
+    } ;
+
+
+
+function onDevFound(){
+	wampClient.sendSubscribe({},"com.sonycsl.kadecot.lightbluebean.topic.serial"
+	    ,function(r){
+		//console.log('Value changed : '+JSON.stringify(r));
+			var beanname = r[5].beanname ;
+			if( beanname === 'HEMSPrinter' ){
+				onPrinterButtonPressed(r[5].value);
+			} else if( beanname === 'DoorSensor' ){
+				if(r[5].value == 'I')
+					onDoorIn() ;	// in
+				else
+					onDoorOut() ;	// out
+
+			} else if( beanname === 'FourzeBelt' ){
+				onFourzeBelt(r[5].value) ;
+			}
+		}
+	    ,function(){
+		console.log('Subscribed : '+JSON.stringify(arguments));
+		}
+	);
+}
+
+function onPrinterButtonPressed(value){
+	console.log('onPrinterButtonPressed') ;
+	mq_socket.emit('message','HEMSPrinter,'+value) ;
+}
+function onDoorIn(){
+	mq_socket.emit('message','DoorSensor,I') ;
+}
+function onDoorOut(){
+	mq_socket.emit('message','DoorSensor,O') ;
+}
+
+function onFourzeBelt(value){
+	//console.log('Belt : '+value) ;
+	switch(value){
+	case 'A' :
+	case 'Y' :
+		el_sw_on(ecocute,true) ;
+		break ;
+	case 'a' :
+	case 'y' :
+		el_sw_on(ecocute,false) ;
+		break ;
+	case 'c' :
+	case 'd' :
+		el_sw_on(light,true) ;
+		break ;
+	case 'C' :
+	case 'D' :
+		el_sw_on(light,false) ;
+		break ;
+	case 'e' :
+	case 'f' :
+		el_sw_on(aircon,true) ;
+		break ;
+	case 'E' :
+	case 'F' :
+		el_sw_on(aircon,false) ;
+		break ;
+	case 'x' :
+	case 'b' :
+		el_sw_on(irkit,true) ;
+		break; 
+	case 'X' :
+	case 'B' :
+		el_sw_on(irkit,false) ;
+		break; 
+	}
+}
+function el_sw_on(d,bOn){
+	if( d === undefined ){console.log('Device not found');return;}
+	if( d.protocol == 'irkit' ){
+		wampClient.sendCall(
+	            {"deviceId":d.deviceId}
+	            ,"com.sonycsl.kadecot.irkit.procedure.postMessages"
+	            ,[]
+	            ,(bOn
+			?{"data":[17421,8755,1111,1111,1111,1111,1111,1111,1111,1232,1111,1111,1111,1111,1111,1111,1111,3341,1111,1111,1111,3341,1111,1111,1111,3341,1111,1111,1111,3341,1111,3341,1111,1232,1232,1111,1111,1111,1111,1111,1232,1232,1111,1111,1111,1232,1111,1111,1111,3341,1111,3341,1111,3341,1111,3341,1111,3341,1111,3341,1111,3341,1111,3341,1111,1111,1111,65535,0,21415,17421,8755,1111,1111,1111,1111,1111,1111,1111,1232,1037,1232,1037,1232,1037,1232,1037,3341,1073,1073,1073,3341,1073,1073,1073,3341,1073,1190,1037,3341,1111,3341,1111,1232,1111,1232,1111,1232,1111,1232,1111,1232,1232,1111,1232,1232,1002,1190,1190,3341,1111,3341,1111,3341,1111,3341,1111,3341,1111,3341,1111,3341,1111,3341,1111,1111,1111]}
+			:{"data":[17421,8755,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,3341,1111,1111,1111,3341,1111,1111,1111,3341,1111,1111,1111,3341,1111,3341,1111,1111,1111,1111,1111,3341,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,3341,1111,3341,1111,1111,1111,3341,1111,3341,1111,3341,1111,3341,1111,3341,1111,1111,1111,65535,0,21415,17421,8755,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,3341,1150,1150,1150,3341,1150,1150,1150,3341,1150,1150,1150,3341,1150,3341,1150,1150,1150,1150,1150,3341,1150,1150,1150,1150,1150,1150,1150,1150,1150,1150,1150,3341,1150,3341,1150,1150,1150,3341,1150,3341,1150,3341,1150,3341,1150,3341,1150,1150,1150,65535,0,21415,17421,8755,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,1111,3228,1111,1111,1111,3228,1111,1111,1111,3228,1111,1111,1111,3228,1111,3228,1111,1111,1111,1111,1111,3228,1111,1111,1111,1232,1232,1111,1111,1111,1111,1111,1111,3341,1150,3341,1150,1150,1037,3341,1037,3341,1037,3341,1037,3341,1037,3341,1037,1190,1190]}
+			)
+	          );
+	} else if( d.deviceType == 'ElectricWaterHeater' )
+		wampClient.sendCall(
+	            {"deviceId":d.deviceId}
+	            ,"com.sonycsl.kadecot.echonetlite.procedure.set"
+	            ,[]
+	            ,{"propertyName":"0xe3","propertyValue":[bOn?0x41:0x42]}
+	          );
+	else
+		wampClient.sendCall(
+	            {"deviceId":d.deviceId}
+	            ,"com.sonycsl.kadecot.echonetlite.procedure.set"
+	            ,[]
+	            ,{"propertyName":"OperationStatus","propertyValue":[bOn?48:49]}
+	          );
+}
+
+    </script>
+</head>
+<body>
+</body>
+</html>

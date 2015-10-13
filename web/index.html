@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>HEMSPrinter</title>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/top.css">
+<script src="js/jquery-1.11.3.min.js"></script>
+<!-- script src="js/top.js"></script -->
+<script src="mq/socket.io.js"></script>
+<script src="mq.js"></script>
+<!-- script type="text/javascript" src="http://app.kadecot.net/js/wamp-client.min.js"></script>
+<script type="text/javascript" src="http://app.kadecot.net/js/wamp-client-browser.js"></script -->
+<script>
+
+function setPrinterNotify(mode){
+	mq.setPrinterButtonLED(mode) ;
+}
+
+var req = null ;
+
+function onDR(){
+		console.log('Demand response received.:'+JSON.stringify(msg)) ;
+}
+
+function onDoorOut(){
+		console.log('Door out received.') ;
+		//setPrinterNotify(true);
+		//req='out';
+}
+
+function onDoorIn(){
+		console.log('Door in received.') ;
+		setPrinterNotify(true);
+		req='in';
+}
+
+function onPrinterButtonPressed(){
+	setPrinterNotify(false) ;
+	if( req == null ) return ;
+	$('#ifrm')[0].contentDocument.location.replace(req+'.html');
+	req = null ;
+
+}
+
+
+mq.init(onDR,onDoorOut,onDoorIn,onPrinterButtonPressed) ;
+
+setPrinterNotify(true);
+</script>
+</head>
+<body>
+<iframe id='ifrm' width="1" height="1" ></iframe>
+	<h1 class="top">HEMS Printer</h1>
+	<div class="btn_area"> 
+
+		<input id="out" type="button" value="" onclick="setPrinterNotify(true);req='out';return false;">
+		<input id="in" type="button" value="" onclick="setPrinterNotify(true);req='in'; return false;">
+		<input id="off" type="button" value="" onclick="setPrinterNotify(true);req='dr'; return false;">
+	</div>
+</body>
+</html>

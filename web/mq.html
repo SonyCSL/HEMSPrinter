@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>HEMSPrinterSample</title>
+<script src="mq/socket.io.js"></script>
+<script src="mq.js"></script>
+<script>
+var bPrinterBtnLED = false ;
+mq.init(function(msg){
+		console.log('Demand response received.:'+JSON.stringify(msg)) ;
+	}
+	,function(){
+		console.log('Door out received.') ;
+	}
+	,function(){
+		console.log('Door in received.') ;
+	}
+	,function(){
+		console.log('Printer button pressed.') ;
+		bPrinterBtnLED = !bPrinterBtnLED ;
+		mq.setPrinterButtonLED(bPrinterBtnLED) ;
+	}
+) ;
+
+/*setTimeout(function(){
+	mq.getPowerStatus(function(status){
+		console.log('Power status callback: '+JSON.stringify(status)) ;
+	}) ;
+	mq.allPowerOff() ;
+},1000) ;
+*/
+
+function onGetUserProfile(){
+	mq.getUserProfile( function(re){
+		alert(JSON.stringify(re)) ;
+	}) ;
+}
+</script>
+<body>
+<input type="button" onclick="mq.allPowerOff()" value="allPowerOff"></input>
+<input type="button" onclick="onGetUserProfile();" value="getUserProfile"></input>
+<div id="status">
+</div>
+
+</body>
+</html>

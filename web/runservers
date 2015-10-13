@@ -1,0 +1,4 @@
+#!/bin/bash
+mosquitto -v -p 12345 &
+node mq/runnode.js &
+
